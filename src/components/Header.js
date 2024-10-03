@@ -124,9 +124,9 @@ function Header() {
         </ul>
 
         <Breadcrumb />
-        <div className="text-center blink-soft">
+        {/* <div className="text-center blink-soft">
           <h2 className="demo_smsm">In Demo SMS Will Not Work</h2>
-        </div>
+        </div> */}
 
         <ul className="navbar-nav ml-auto">
           <li className="nav-item dropdown">

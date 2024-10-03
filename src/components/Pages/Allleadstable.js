@@ -45,7 +45,8 @@ export const Allleadstable = ({
     };
     fetchData();
   }, []);
-  const getAllLead1 = async () => {
+
+  const getAllLead = async () => {
     try {
       const responce = await axios.get(
         `${apiUrl}/get_all_lead?isHotLead=${isHotLead}`,
@@ -66,6 +67,31 @@ export const Allleadstable = ({
       setfilterleads();
     }
   };
+
+
+  const getAllLead1 = async () => {
+    try {
+      const responce = await axios.get(
+        `${apiUrl}/get_all_lead`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "mongodb-url": DBuUrl,
+            // Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
+      setstatus(responce?.data?.success);
+      setleads(responce?.data?.lead);
+      setfilterleads(responce?.data?.lead);
+      return responce?.data?.message;
+    } catch (error) {
+      console.log(error);
+      setfilterleads();
+    }
+  };
+
+  
 
   const getAllLead2 = async (assign_to_agent) => {
     try {
