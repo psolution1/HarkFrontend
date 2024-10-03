@@ -91,6 +91,7 @@ function Home() {
           headers: {
             "Content-Type": "application/json",
             "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
@@ -107,6 +108,7 @@ function Home() {
         headers: {
           "Content-Type": "application/json",
           "mongodb-url": DBuUrl,
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
       setDetail(responce?.data?.array);
@@ -127,6 +129,7 @@ function Home() {
           headers: {
             "Content-Type": "application/json",
             "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
@@ -143,6 +146,8 @@ function Home() {
         headers: {
           "Content-Type": "application/json",
           "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+
         },
       });
       setSale(responce?.data?.details);
@@ -162,6 +167,8 @@ function Home() {
           headers: {
             "Content-Type": "application/json",
             "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+
           },
         }
       );
@@ -181,6 +188,8 @@ function Home() {
           headers: {
             "Content-Type": "application/json",
             "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+
           },
         }
       );
@@ -196,6 +205,7 @@ function Home() {
         headers: {
           "Content-Type": "application/json",
           "mongodb-url": DBuUrl,
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
       setleadsourcedata(responce?.data?.Lead_source_count);
@@ -215,6 +225,8 @@ function Home() {
           headers: {
             "Content-Type": "application/json",
             "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+
           },
         }
       );
@@ -235,6 +247,8 @@ function Home() {
           headers: {
             "Content-Type": "application/json",
             "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+
           },
         }
       );
@@ -252,6 +266,7 @@ function Home() {
         headers: {
           "Content-Type": "application/json",
           "mongodb-url": DBuUrl,
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
       setleadcountdata(responce?.data?.Count);
@@ -277,11 +292,12 @@ function Home() {
           headers: {
             "Content-Type": "application/json",
             "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+
           },
         }
       );
-     setleadcountdata(responce?.data?.Count);
-
+      setleadcountdata(responce?.data?.Count);
     } catch (error) {
       console.log(error);
       setleadcountdata(error.responce?.data?.Count);
@@ -298,6 +314,7 @@ function Home() {
           headers: {
             "Content-Type": "application/json",
             "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
         }
       );
@@ -727,7 +744,7 @@ function Home() {
               </div>
             </div> */}
 
-            <div className="row d-none">
+            <div className="row">
               <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 pl-0">
                 <div className="panel panel-bd  bg-white">
                   <div className="panel-heading">
@@ -884,7 +901,7 @@ function Home() {
                   </div>
                 </div>
               </div>
-              <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6 d-none">
+              <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                 <div className="panel panel-bd  bg-white">
                   <div className="panel-heading">
                     <div className="panel-title   d-flex justify-content-between">
@@ -1227,7 +1244,6 @@ function Home() {
                   </div>
                 </div>
               </div>
-              
             </div>
 
             {/* /.row (main row) */}

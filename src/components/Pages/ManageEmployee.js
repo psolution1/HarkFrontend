@@ -16,6 +16,8 @@ function ManageEmployee() {
         headers: {
           "Content-Type": "application/json",
           "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+
         }
       }
       );
@@ -35,6 +37,8 @@ function ManageEmployee() {
         headers: {
           "Content-Type": "application/json",
           "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+
         }
       }
       );
@@ -71,6 +75,8 @@ function ManageEmployee() {
       headers: {
         "Content-Type": "application/json",
         "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+
       },
       body: JSON.stringify(adSerch),
     })

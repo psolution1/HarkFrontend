@@ -26,7 +26,8 @@ function SideNav() {
         activeItem === "leads" ||
         activeItem === "followupleads" ||
         activeItem === "importedlead" ||
-        activeItem === "newlead"
+        activeItem === "newlead" ||
+        activeItem === "hotlead"
       ) {
         return "lead";
       }
@@ -52,7 +53,7 @@ function SideNav() {
         return "allapi";
       }
 
-      if (activeItem === "Incomereport" || activeItem === "Callreport") {
+      if (activeItem === "Incomereport" || activeItem === "Callreport"|| activeItem === "Productreport") {
         return "Report";
       }
     };
@@ -222,6 +223,18 @@ function SideNav() {
                             <p> New Leads</p>
                           </Link>
                         </li>
+                        <li className="nav-item">
+                          <Link
+                            to="/hotlead"
+                            className={
+                              activeItem === "hotlead"
+                                ? "nav-link active"
+                                : "nav-link"
+                            }
+                          >
+                            <p> Hot Lead</p>
+                          </Link>
+                        </li>
 
                         <li className="nav-item">
                           <Link
@@ -281,53 +294,53 @@ function SideNav() {
                         </li>
                       </ul>
                     </li>
-                    
+
                     {/* manage sms start */}
                     {(userRole === "admin" || userRole === "TeamLeader") && (
-                    <li className="nav-item">
-                      <Link
-                        to="#"
-                        className="nav-link"
-                        onClick={() => handleParentClick("smsManage")}
-                      >
-                        <i className="nav-icon fas fa fa fa-cog" />
-                        SMS Panel
-                        <i className="fas fa-angle-left right" />
-                      </Link>
-                      <ul
-                        className="nav nav-treeview"
-                        style={{
-                          display:
-                            activeParent === "smsManage" ? "block" : "none",
-                        }}
-                      >
-                        <li className="nav-item">
-                          <Link
-                            to="/GroupSms"
-                            className={
-                              activeItem === "GroupSms"
-                                ? "nav-link active"
-                                : "nav-link"
-                            }
-                          >
-                            <p>Compose SMS</p>
-                          </Link>
-                        </li>
+                      <li className="nav-item">
+                        <Link
+                          to="#"
+                          className="nav-link"
+                          onClick={() => handleParentClick("smsManage")}
+                        >
+                          <i className="nav-icon fas fa fa fa-cog" />
+                          SMS Panel
+                          <i className="fas fa-angle-left right" />
+                        </Link>
+                        <ul
+                          className="nav nav-treeview"
+                          style={{
+                            display:
+                              activeParent === "smsManage" ? "block" : "none",
+                          }}
+                        >
+                          <li className="nav-item">
+                            <Link
+                              to="/GroupSms"
+                              className={
+                                activeItem === "GroupSms"
+                                  ? "nav-link active"
+                                  : "nav-link"
+                              }
+                            >
+                              <p>Compose SMS</p>
+                            </Link>
+                          </li>
 
-                        <li className="nav-item">
-                          <Link
-                            to="/History"
-                            className={
-                              activeItem === "History"
-                                ? "nav-link active"
-                                : "nav-link"
-                            }
-                          >
-                            <p> SMS Report</p>
-                          </Link>
-                        </li>
+                          <li className="nav-item">
+                            <Link
+                              to="/History"
+                              className={
+                                activeItem === "History"
+                                  ? "nav-link active"
+                                  : "nav-link"
+                              }
+                            >
+                              <p> SMS Report</p>
+                            </Link>
+                          </li>
 
-                        <li className="nav-item">
+                          {/* <li className="nav-item">
                           <Link
                             to="/buysms"
                             className={
@@ -338,59 +351,59 @@ function SideNav() {
                           >
                             <p> SMS Pack</p>
                           </Link>
-                        </li>
-                      </ul>
-                    </li>
+                        </li> */}
+                        </ul>
+                      </li>
                     )}
 
                     {/* manage sms end */}
 
                     {/* manage Wtsp start */}
                     {(userRole === "admin" || userRole === "TeamLeader") && (
-                    <li className="nav-item">
-                      <Link
-                        to="#"
-                        className="nav-link inactive"
-                        onClick={() => handleParentClick("wtspManage")}
-                      >
-                        <i className="nav-icon fas fa fa fa-cog" />
-                        What's App
-                        <i className="fas fa-angle-left right" />
-                      </Link>
-                      <ul
-                        className="nav nav-treeview"
-                        style={{
-                          display:
-                            activeParent === "wtspManage" ? "block" : "none",
-                        }}
-                      >
-                        <li className="nav-item">
-                          <Link
-                            to="/GroupSmsWtsp"
-                            className={
-                              activeItem === "GroupSmsWtsp"
-                                ? "nav-link active"
-                                : "nav-link"
-                            }
-                          >
-                            <p>Compose What's App</p>
-                          </Link>
-                        </li>
+                      <li className="nav-item">
+                        <Link
+                          to="#"
+                          className="nav-link inactive"
+                          onClick={() => handleParentClick("wtspManage")}
+                        >
+                          <i className="nav-icon fas fa fa fa-cog" />
+                          What's App
+                          <i className="fas fa-angle-left right" />
+                        </Link>
+                        <ul
+                          className="nav nav-treeview"
+                          style={{
+                            display:
+                              activeParent === "wtspManage" ? "block" : "none",
+                          }}
+                        >
+                          <li className="nav-item">
+                            <Link
+                              to="/GroupSmsWtsp"
+                              className={
+                                activeItem === "GroupSmsWtsp"
+                                  ? "nav-link active"
+                                  : "nav-link"
+                              }
+                            >
+                              <p>Compose What's App</p>
+                            </Link>
+                          </li>
 
-                        <li className="nav-item">
-                          <Link
-                            to="/HistoryWtsp"
-                            className={
-                              activeItem === "HistoryWtsp"
-                                ? "nav-link active"
-                                : "nav-link"
-                            }
-                          >
-                            <p> What's App Report</p>
-                          </Link>
-                        </li>
+                          <li className="nav-item">
+                            <Link
+                              to="/HistoryWtsp"
+                              className={
+                                activeItem === "HistoryWtsp"
+                                  ? "nav-link active"
+                                  : "nav-link"
+                              }
+                            >
+                              <p> What's App Report</p>
+                            </Link>
+                          </li>
 
-                        <li className="nav-item">
+                          {/* <li className="nav-item">
                           <Link
                             to="/BuysmsWtsp"
                             className={
@@ -401,9 +414,9 @@ function SideNav() {
                           >
                             <p> What's App Pack</p>
                           </Link>
-                        </li>
+                        </li> */}
 
-                        <li className="nav-item">
+                          {/* <li className="nav-item">
                           <Link
                             to="/BusinessWA"
                             className={
@@ -414,33 +427,33 @@ function SideNav() {
                           >
                             <p>Business WA</p>
                           </Link>
-                        </li>
+                        </li> */}
 
-                        {/* <li className="nav-item">
+                          {/* <li className="nav-item">
                   <a   href="" className={activeItem === 'buysms' ? 'nav-link active' : 'nav-link'}
                   onClick={() => handleItemClick('buysms')}>
                       <p> Setting</p>
                     </a>
                   </li> */}
-                      </ul>
-                    </li>
+                        </ul>
+                      </li>
                     )}
                     {/* manage Wtsp end */}
                     {(userRole === "admin" || userRole === "TeamLeader") && (
-                    <li className="nav-item">
-                      <Link
-                        to="/UploadContent"
-                        className={
-                          activeItem === "UploadContent"
-                            ? "nav-link active"
-                            : "nav-link"
-                        }
-                      >
-                        <i className="nav-icon far fa-credit-card" />
-                        Contact's
-                      </Link>
-                    </li>
-                  )}
+                      <li className="nav-item">
+                        <Link
+                          to="/UploadContent"
+                          className={
+                            activeItem === "UploadContent"
+                              ? "nav-link active"
+                              : "nav-link"
+                          }
+                        >
+                          <i className="nav-icon far fa-credit-card" />
+                          Contact's
+                        </Link>
+                      </li>
+                    )}
 
                     {/* Api  */}
                     <li className="nav-item">
@@ -489,22 +502,22 @@ function SideNav() {
                     </li>
 
                     {/* <li className="nav-item">
-                  <a href="" className={activeItem === 'Report' ? 'nav-link active' : 'nav-link'}
-                    onClick={() => handleItemClick('Report')}>
-                    <i className="nav-icon far fa-file" />
-                    Report
-                  </a>
-                </li> */}
+                    <a href="" className={activeItem === 'Report' ? 'nav-link active' : 'nav-link'}
+                      onClick={() => handleItemClick('Report')}>
+                      <i className="nav-icon far fa-file" />
+                      Report
+                    </a>
+                  </li> */}
 
                     {/* for report  */}
-                    {/* <li className="nav-item">
+                    <li className="nav-item">
                       <Link
                         to="#"
                         className="nav-link"
                         onClick={() => handleParentClick("Report")}
                       >
                         <i className="nav-icon fas fa fa-user-md" />
-                        Report
+                        Report's
                         <i className="fas fa-angle-left right" />
                       </Link>
                       <ul
@@ -534,11 +547,11 @@ function SideNav() {
                                 : "nav-link"
                             }
                           >
-                            <p>Callreport</p>
+                            <p>Call Report</p>
                           </Link>
                         </li>
                       </ul>
-                    </li> */}
+                    </li>
                     {/* for report */}
 
                     <li className="nav-item">

@@ -33,6 +33,8 @@ export default function Incomereport() {
         headers: {
           "Content-Type": "application/json",
           "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+
         }
       }
       );
@@ -101,6 +103,8 @@ export default function Incomereport() {
     const headers = {
       "Content-Type": "application/json",
       "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+
     };
     try {
       const responce = await axios.post(

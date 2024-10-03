@@ -10,7 +10,11 @@ import { getAllStatus } from "../../features/statusSlice";
 import { toast } from "react-toastify";
 // import ReactHTMLTableToExcel from 'react-html-table-to-excel'; // Import the library
 
-export const Allleadstable = ({ sendDataToParent, dataFromParent }) => {
+export const Allleadstable = ({
+  sendDataToParent,
+  isHotLead = false,
+  dataFromParent,
+}) => {
   const dispatch = useDispatch();
   const [leads, setleads] = useState([]);
   const [status, setstatus] = useState("true");
@@ -43,12 +47,16 @@ export const Allleadstable = ({ sendDataToParent, dataFromParent }) => {
   }, []);
   const getAllLead1 = async () => {
     try {
-      const responce = await axios.get(`${apiUrl}/get_all_lead`, {
-        headers: {
-          "Content-Type": "application/json",
-          "mongodb-url": DBuUrl,
-        },
-      });
+      const responce = await axios.get(
+        `${apiUrl}/get_all_lead?isHotLead=${isHotLead}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
       setstatus(responce?.data?.success);
       setleads(responce?.data?.lead);
       setfilterleads(responce?.data?.lead);
@@ -94,6 +102,13 @@ export const Allleadstable = ({ sendDataToParent, dataFromParent }) => {
         `${apiUrl}/getLeadbyTeamLeaderidandwithstatus`,
         {
           assign_to_agent,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
         }
       );
       setstatus(responce?.data?.success);
@@ -535,6 +550,7 @@ export const Allleadstable = ({ sendDataToParent, dataFromParent }) => {
         headers: {
           "Content-Type": "application/json",
           "mongodb-url": DBuUrl,
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
         body: JSON.stringify(aaaaa),
       })
@@ -576,6 +592,7 @@ export const Allleadstable = ({ sendDataToParent, dataFromParent }) => {
       headers: {
         "Content-Type": "application/json",
         "mongodb-url": DBuUrl,
+        Authorization: "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify(updatedata),
     })
@@ -679,12 +696,15 @@ export const Allleadstable = ({ sendDataToParent, dataFromParent }) => {
 
   return (
     <div>
-      <div className="row justify-content-md-center" style={{ display: dataFromParent }}>
-        <div className="advS">
+      <div
+        className="row justify-content-md-center"
+        style={{ display: dataFromParent }}
+      >
+        <div className="col-md-12 advS">
           <form onSubmit={AdvanceSerch}>
             <div className="advfilter-wrap-box">
               <div className="row justify-content-md-center">
-                <div className="col-md-3 col-6">
+                <div className="col-md-3 ">
                   <div className="form-group">
                     <select
                       className="form-control"
@@ -696,13 +716,15 @@ export const Allleadstable = ({ sendDataToParent, dataFromParent }) => {
                       <option>Status</option>
                       {Statusdata?.leadstatus?.map((status, key) => {
                         return (
-                          <option value={status._id}>{status.status_name}</option>
+                          <option value={status._id}>
+                            {status.status_name}
+                          </option>
                         );
                       })}
                     </select>
                   </div>
                 </div>
-                <div className="col-md-3 col-6">
+                <div className="col-md-3">
                   <div className="form-group">
                     <select
                       className="form-control"
@@ -715,26 +737,31 @@ export const Allleadstable = ({ sendDataToParent, dataFromParent }) => {
                       <option value="Unassigne">Unassigned Agent</option>
                       {agent?.agent?.map((agents, key) => {
                         return (
-                          <option value={agents._id}>{agents.agent_name}</option>
+                          <option value={agents._id}>
+                            {agents.agent_name}
+                          </option>
                         );
                       })}
                     </select>
                   </div>
                 </div>
-                <div className="col-md-3 col-6">
+                <div className="col-md-3">
                   <div className="form-group">
                     <input
                       type="date"
                       placeholder="Date To"
                       className="form-control"
                       onChange={(e) =>
-                        setAdvanceSerch({ ...adSerch, startDate: e.target.value })
+                        setAdvanceSerch({
+                          ...adSerch,
+                          startDate: e.target.value,
+                        })
                       }
                       name="startDate"
                     />
                   </div>
                 </div>
-                <div className="col-md-3 col-6">
+                <div className="col-md-3">
                   <div className="form-group">
                     <input
                       type="date"
@@ -748,22 +775,16 @@ export const Allleadstable = ({ sendDataToParent, dataFromParent }) => {
                   </div>
                 </div>
 
-                <div className="col-md-3 col-6">
+                <div className="col-md-3">
                   <div className="form-group">
-                    <button
-                      type="submit"
-                      className="btn-advf-sub"
-                    >
+                    <button type="submit" className="btn-advf-sub">
                       Submit
                     </button>
                   </div>
                 </div>
-                <div className="col-md-3 col-6">
+                <div className="col-md-3">
                   <div className="form-group">
-                    <button
-                      onClick={Refresh}
-                      className="btn-advf-refresh"
-                    >
+                    <button onClick={Refresh} className="btn-advf-refresh">
                       Refresh
                     </button>
                   </div>
@@ -778,22 +799,13 @@ export const Allleadstable = ({ sendDataToParent, dataFromParent }) => {
           <div className="export-wrap">
             {isAdmin1 ? (
               <>
-                <button
-                  className="btn-ecport-pdf"
-                  onClick={exportToPDF}
-                >
+                <button className="btn-ecport-pdf" onClick={exportToPDF}>
                   Export PDF
                 </button>
-                <button
-                  className="btn-ecport-xls"
-                  onClick={exportToExcel}
-                >
+                <button className="btn-ecport-xls" onClick={exportToExcel}>
                   Export Excel
                 </button>
-                <button
-                  className="btn-ecport-del"
-                  onClick={DeleteSelected}
-                >
+                <button className="btn-ecport-del" onClick={DeleteSelected}>
                   Delete
                 </button>{" "}
               </>
@@ -829,16 +841,10 @@ export const Allleadstable = ({ sendDataToParent, dataFromParent }) => {
         <>
           {isAdmin1 ? (
             <>
-              <button
-                className="btn-sel-all"
-                onClick={handleCheckAll1}
-              >
+              <button className="btn-sel-all" onClick={handleCheckAll1}>
                 Select All
               </button>
-              <button
-                className="btn-sel-one"
-                onClick={handleCheckAll}
-              >
+              <button className="btn-sel-one" onClick={handleCheckAll}>
                 Select Per Page
               </button>
               <span class="btn btn-sm shadow_btn">Rows per page:</span>
@@ -857,16 +863,10 @@ export const Allleadstable = ({ sendDataToParent, dataFromParent }) => {
           ) : (
             <>
               {" "}
-              <button
-                className="btn-sel-all"
-                onClick={handleCheckAll1}
-              >
+              <button className="btn-sel-all" onClick={handleCheckAll1}>
                 Select All
               </button>
-              <button
-                className="btn-sel-one"
-                onClick={handleCheckAll}
-              >
+              <button className="btn-sel-one" onClick={handleCheckAll}>
                 Select Per Page
               </button>
               <span class="btn btn-sm shadow_btn">Rows per page:</span>

@@ -8,7 +8,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllAgent } from "../../features/agentSlice";
 import { getAllStatus } from "../../features/statusSlice";
 import { toast } from "react-toastify";
+import { addlead } from "../../features/leadSlice";
 // import ReactHTMLTableToExcel from 'react-html-table-to-excel'; // Import the library
+
+const disposition = [
+  "Not Interested",
+  "Interested",
+  "Not Contacted",
+  "Not Answered",
+  "Callback",
+  "Not Reachable",
+  "Call Disconnected",
+  "Busy",
+  "Won"
+];
 
 export const AllNewLead = ({ sendDataToParent, dataFromParent }) => {
   const dispatch = useDispatch();
@@ -38,16 +51,17 @@ export const AllNewLead = ({ sendDataToParent, dataFromParent }) => {
         headers: {
           "Content-Type": "application/json",
           "mongodb-url": DBuUrl,
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
-  const leads = responce?.data?.lead || [];
+      const leads = responce?.data?.lead || [];
 
-// Filter out leads where type is 'excel'
-const filteredLeads = leads.filter(lead => lead.type !== 'excel');
+      // Filter out leads where type is 'excel'
+      const filteredLeads = leads.filter((lead) => lead.type !== "excel");
 
-// Set the filtered leads
-setleads(filteredLeads);
-setfilterleads(filteredLeads);
+      // Set the filtered leads
+      setleads(filteredLeads);
+      setfilterleads(filteredLeads);
 
       return responce?.data?.message;
     } catch (error) {
@@ -62,9 +76,19 @@ setfilterleads(filteredLeads);
 
   const getAllLead2 = async (assign_to_agent) => {
     try {
-      const responce = await axios.post(`${apiUrl}/getAllNewLeadBYAgentId`, {
-        assign_to_agent,
-      });
+      const responce = await axios.post(
+        `${apiUrl}/getAllNewLeadBYAgentId`,
+        {
+          assign_to_agent,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "mongodb-url": DBuUrl,
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
       if (responce?.data?.success === true) {
         setstatus(responce?.data?.success);
         setleads(responce?.data?.lead);
@@ -227,6 +251,30 @@ setfilterleads(filteredLeads);
     },
   ];
 
+  const updateDisposition = async (row, e) => {
+    e.preventDefault();
+    // console.log("disposition", row, e.target.value);
+    const updatedLeadData = {
+      ...row,
+      disposition: e.target.value,
+    };
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    };
+    try {
+      const responce = await axios.put(
+        `${apiUrl}/UpdateLeadByLeadId/${row?._id}`,
+        updatedLeadData,
+        { headers }
+      );
+      toast.success(responce?.data?.message);
+    } catch (error) {
+      toast.warn(error?.response?.data?.message);
+    }
+  };
+
   const getStatusBadgeClass = (statusName) => {
     switch (statusName) {
       case "Call Back & Hot Lead": {
@@ -267,6 +315,26 @@ setfilterleads(filteredLeads);
       sortable: true,
       cell: (row) => <div style={{ display: "none" }}>{row.description}</div>,
     },
+    {
+      name: "Disposition & Remaks",
+      cell: (row) => (
+        <div>
+          <select
+            name="disposition"
+            onChange={(e) => updateDisposition(row, e)}
+            value={row?.disposition}
+          >
+            <option>Select</option>
+            {disposition.map((item, index) => {
+              return <option value={item}>{item}</option>;
+            })}
+          </select>
+        </div>
+      ),
+
+      sortable: true,
+    },
+
     {
       name: "Action",
       cell: (row) => (
@@ -417,6 +485,7 @@ setfilterleads(filteredLeads);
         headers: {
           "Content-Type": "application/json",
           "mongodb-url": DBuUrl,
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
         body: JSON.stringify(aaaaa),
       })
@@ -459,6 +528,7 @@ setfilterleads(filteredLeads);
       headers: {
         "Content-Type": "application/json",
         "mongodb-url": DBuUrl,
+        Authorization: "Bearer " + localStorage.getItem("token"),
       },
       body: JSON.stringify(updatedata),
     })
@@ -529,11 +599,11 @@ setfilterleads(filteredLeads);
   return (
     <div>
       <div className="row " style={{ display: dataFromParent }}>
-        <div className="advS">
+        <div className="col-md-12 advS">
           <form onSubmit={AdvanceSerch}>
             <div className="advfilter-wrap-box">
               <div className="row justify-content-md-center">
-              <div className="col-md-3 col-6">
+                <div className="col-md-3 ">
                   <div className="form-group">
                     <select
                       className="form-control"
@@ -545,13 +615,15 @@ setfilterleads(filteredLeads);
                       <option>Status</option>
                       {Statusdata?.leadstatus?.map((status, key) => {
                         return (
-                          <option value={status._id}>{status.status_name}</option>
+                          <option value={status._id}>
+                            {status.status_name}
+                          </option>
                         );
                       })}
                     </select>
                   </div>
                 </div>
-                <div className="col-md-3 col-6">
+                <div className="col-md-3">
                   <div className="form-group">
                     <select
                       className="form-control"
@@ -564,26 +636,31 @@ setfilterleads(filteredLeads);
                       <option value="Unassigne">Unassigned Agent</option>
                       {agent?.agent?.map((agents, key) => {
                         return (
-                          <option value={agents._id}>{agents.agent_name}</option>
+                          <option value={agents._id}>
+                            {agents.agent_name}
+                          </option>
                         );
                       })}
                     </select>
                   </div>
                 </div>
-                <div className="col-md-3 col-6">
+                <div className="col-md-3">
                   <div className="form-group">
                     <input
                       type="date"
                       placeholder="Date To"
                       className="form-control"
                       onChange={(e) =>
-                        setAdvanceSerch({ ...adSerch, startDate: e.target.value })
+                        setAdvanceSerch({
+                          ...adSerch,
+                          startDate: e.target.value,
+                        })
                       }
                       name="startDate"
                     />
                   </div>
                 </div>
-                <div className="col-md-3 col-6">
+                <div className="col-md-3">
                   <div className="form-group">
                     <input
                       type="date"
@@ -597,22 +674,16 @@ setfilterleads(filteredLeads);
                   </div>
                 </div>
 
-                <div className="col-md-3 col-6">
+                <div className="col-md-3">
                   <div className="form-group">
-                    <button
-                      type="submit"
-                      className="btn-advf-sub"
-                    >
+                    <button type="submit" className="btn-advf-sub">
                       Submit
                     </button>
                   </div>
                 </div>
-                <div className="col-md-3 col-6">
+                <div className="col-md-3">
                   <div className="form-group">
-                    <button
-                      onClick={Refresh}
-                      className="btn-advf-refresh"
-                    >
+                    <button onClick={Refresh} className="btn-advf-refresh">
                       Refresh
                     </button>
                   </div>
@@ -624,25 +695,16 @@ setfilterleads(filteredLeads);
       </div>
       <div className="row">
         <div className="col-md-12 advS">
-        <div className="export-wrap">
+          <div className="export-wrap">
             {isAdmin1 ? (
               <>
-                <button
-                  className="btn-ecport-pdf"
-                  onClick={exportToPDF}
-                >
+                <button className="btn-ecport-pdf" onClick={exportToPDF}>
                   Export PDF
                 </button>
-                <button
-                  className="btn-ecport-xls"
-                  onClick={exportToExcel}
-                >
+                <button className="btn-ecport-xls" onClick={exportToExcel}>
                   Export Excel
                 </button>
-                <button
-                  className="btn-ecport-del"
-                  onClick={DeleteSelected}
-                >
+                <button className="btn-ecport-del" onClick={DeleteSelected}>
                   Delete
                 </button>{" "}
               </>
@@ -679,16 +741,10 @@ setfilterleads(filteredLeads);
         <>
           {isAdmin1 ? (
             <>
-              <button
-                className="btn-sel-all"
-                onClick={handleCheckAll1}
-              >
+              <button className="btn-sel-all" onClick={handleCheckAll1}>
                 Select All
               </button>
-              <button
-                className="btn-sel-one"
-                onClick={handleCheckAll}
-              >
+              <button className="btn-sel-one" onClick={handleCheckAll}>
                 Select Per Page
               </button>
               <span class="btn btn-sm shadow_btn">Rows per page:</span>
@@ -707,16 +763,10 @@ setfilterleads(filteredLeads);
           ) : (
             <>
               {" "}
-              <button
-                className="btn-sel-all"
-                onClick={handleCheckAll1}
-              >
+              <button className="btn-sel-all" onClick={handleCheckAll1}>
                 Select All
               </button>
-              <button
-                className="btn-sel-one"
-                onClick={handleCheckAll}
-              >
+              <button className="btn-sel-one" onClick={handleCheckAll}>
                 Select Per Page
               </button>
               <span class="btn btn-sm shadow_btn">Rows per page:</span>
